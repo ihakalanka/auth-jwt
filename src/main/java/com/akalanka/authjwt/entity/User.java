@@ -1,6 +1,7 @@
 package com.akalanka.authjwt.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @Table(name = "user")
 public class User {
     @Id
