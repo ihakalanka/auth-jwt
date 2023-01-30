@@ -1,0 +1,7 @@
+package com.akalanka.authjwt.repository;
+
+import com.akalanka.authjwt.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+}
