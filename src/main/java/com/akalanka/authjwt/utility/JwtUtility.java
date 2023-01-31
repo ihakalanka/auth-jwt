@@ -15,4 +15,8 @@ public class JwtUtility implements Serializable {
     public Claims getAllClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
+
+    public String getFirstNameFromToken(String token) {
+        return getAllClaimsFromToken(token).getSubject();
+    }
 }
