@@ -5,6 +5,8 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.Map;
 import java.util.function.Function;
 
 @Component
@@ -13,7 +15,7 @@ public class JwtUtility implements Serializable {
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
     private String secret = "secret";
 
-    public Claims getAllClaimsFromToken(String token) {
+    private Claims getAllClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
@@ -26,5 +28,18 @@ public class JwtUtility implements Serializable {
         return claimsResolver.apply(claims);
     }
 
+    public Date getExpirationDateFromToken(String token) {
+        return getClaimFromToken(token, Claims::getExpiration);
+    }
 
+    private Boolean isTokenExpired(String token) {
+        final Date expiration = getExpirationDateFromToken(token);
+        return expiration.before(new Date());
+    }
+
+    private String doGenerateToken(Map<String, Object> claims, String subject) {
+        return Jwts.builder().setClaims(claims).setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+                .signWith(io.jsonwebtoken.SignatureAlgorithm.HS512, secret).compact();
+    }
 }
