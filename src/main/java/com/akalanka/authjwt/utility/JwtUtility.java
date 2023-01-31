@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.function.Function;
 
 @Component
 public class JwtUtility implements Serializable {
@@ -19,4 +20,11 @@ public class JwtUtility implements Serializable {
     public String getFirstNameFromToken(String token) {
         return getAllClaimsFromToken(token).getSubject();
     }
+
+    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = getAllClaimsFromToken(token);
+        return claimsResolver.apply(claims);
+    }
+
+
 }
