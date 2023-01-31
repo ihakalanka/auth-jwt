@@ -3,6 +3,8 @@ package com.akalanka.authjwt.service;
 import com.akalanka.authjwt.entity.User;
 import com.akalanka.authjwt.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +24,11 @@ public class UserSerivceImpl implements UserService {
     }
 
     @Override
-    public User findByEmail(User user){
-        return userRepository.findByEmail(user.getEmail());
+    public ResponseEntity<User> findByEmail(User user){
+        User isExistUser = userRepository.findByEmail(user.getEmail());
+        if(isExistUser == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(isExistUser);
     }
 }
