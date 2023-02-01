@@ -8,11 +8,11 @@ import com.akalanka.authjwt.utility.JwtUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -40,15 +40,28 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<Map> loginUser(@RequestBody JwtRequest jwtRequest) {
-        
+        HashMap<String, Object> response = new HashMap<>();
+
+        if(!verifyUser(jwtRequest)){
+            response.put("message", "Invalid username or password");
+            response.put("status", false);
+        }else {
+            final UserDetails userDetails = userSerivce.loadUserByUsername(jwtRequest.getUsername());
+            final String token = jwtUtility.generateToken(userDetails);
+            response.put("message", "Login success",);
+            response.put("token", token);
+            response.put("status", true);
+        } return ResponseEntity.ok(response);
     }
 
     public boolean verifyUser(JwtRequest jwtRequest) {
         boolean isVerified = false;
         User user = userRepository.findByEmail(jwtRequest.getUsername());
+
         if(passwordEncoder.matches(jwtRequest.getPassword(), user.getPassword())){
             isVerified = true;
         }
+
         return isVerified;
     }
 
