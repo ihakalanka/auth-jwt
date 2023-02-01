@@ -45,7 +45,7 @@ public class UserController {
         }else {
             final UserDetails userDetails = userSerivce.loadUserByUsername(jwtRequest.getUsername());
             final String token = jwtUtility.generateToken(userDetails);
-            response.put("message", "Login success",);
+            response.put("message", "Login success");
             response.put("token", token);
             response.put("status", true);
         } return ResponseEntity.ok(response);
