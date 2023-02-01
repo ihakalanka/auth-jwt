@@ -5,5 +5,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface UserService {
     User save(User user);
-    ResponseEntity<User> findByEmail(User user);
+    User findByEmail(User user);
 }

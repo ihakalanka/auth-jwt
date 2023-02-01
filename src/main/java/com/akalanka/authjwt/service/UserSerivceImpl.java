@@ -28,12 +28,12 @@ public class UserSerivceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public ResponseEntity<User> findByEmail(User user){
+    public User findByEmail(User user){
         User isExistUser = userRepository.findByEmail(user.getEmail());
         if(isExistUser == null){
-            return ResponseEntity.notFound().build();
+            throw new UsernameNotFoundException("User not found with email: " + user.getEmail());
         }
-        return ResponseEntity.ok(isExistUser);
+        return isExistUser;
     }
 
     @Override
